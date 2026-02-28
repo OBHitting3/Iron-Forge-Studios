@@ -60,7 +60,7 @@
 
 **Status:** MVP shipped, security hardened, expanding
 **Language:** Python
-**Branches:** Rate-limited before full retrieval
+**Branches:** 27 total (26 cursor/ feature branches + main)
 
 ### Completed This Week
 
