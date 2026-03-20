@@ -1,6 +1,6 @@
-# AiRE Sovereign Handoff — Gemini Recovery
+# AiRE Sovereign Handoff — SuperGrok Recovery
 
-**Source:** Gemini sessions (multiple threads through March 18, 2026)
+**Source:** SuperGrok sessions (multiple threads through March 18, 2026)
 **Status:** Pre-MVP. Virtual twin + portal spec stage. Some Lua code exists in Roblox Studio.
 
 ---
