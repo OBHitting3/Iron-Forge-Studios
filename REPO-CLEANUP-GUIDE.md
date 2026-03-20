@@ -1,171 +1,175 @@
-# Iron Forge Studios — Repository Inventory & Cleanup Guide
+# Your Projects — What You Have & What To Do With Them
 
-**Date:** March 20, 2026
-**Owner:** OBHitting3
-**Purpose:** Get clarity on every repo, decide what to keep, archive, or delete.
+**The short version:** You have 8 projects on GitHub. 2 of them are great. The rest are clutter. Let's sort it out.
 
 ---
 
-## How to Use This Document
+## First — Some Words Explained
 
-Go through each repo below. For each one, there's a **Recommendation** and an **Action** checkbox. The recommendations are based on how much real work exists and whether the project has a clear path forward. You make the final call.
+You're Cole Trickle. You can drive the car. You just need someone to tell you what "loose" and "tight" mean. So here's your glossary before we start:
 
-**Legend:**
-- **KEEP** — Active project with real code/value. Keep developing.
-- **ARCHIVE** — Has useful work but you're not actively building it. Archive on GitHub (read-only, still accessible).
-- **DELETE** — Empty or redundant. Safe to remove.
-- **MERGE** — Consolidate into another repo.
+- **Repository (repo):** Think of it like a folder for a project. It holds all the files, all the history of changes, everything. Each of your projects lives in its own repo on GitHub.
 
----
+- **GitHub:** A website that stores your project folders (repos) online. Like Google Drive, but for code. Other people can see your public repos.
 
-## 1. Iron-Forge-Studios (this repo)
+- **Branch:** A copy of your project where you can try new things without messing up the original. Think of it like making a photocopy of a document to scribble on — the original stays safe.
 
-| | |
-|---|---|
-| **What it is** | Your organization hub repo. Contains the Palm Springs Paradise Roblox game prototype (36 Luau files), an investor market analysis, and a weekly activity summary. |
-| **Language** | Luau (Roblox), Markdown |
-| **Real code?** | Yes — full game architecture with 8 server services, 6 client controllers, rate limiting, monetization system, anti-grief systems. Production-grade Rojo v7 structure. |
-| **Status** | Game prototype complete. Docs current as of March 2026. |
-| **Recommendation** | **KEEP** — This is your home base and has a complete game prototype. |
+- **PR (Pull Request):** A request to take the changes you made on a branch and put them into the main version of the project. Like saying "hey, I made improvements on my photocopy — let's make these the real version now."
 
-- [ ] Action: Keep as-is. Consider renaming or clarifying that this is both the org hub and the PSP game repo.
+- **MVP (Minimum Viable Product):** The simplest version of your product that actually works. Not fancy, but functional. Like a race car that runs and steers but doesn't have the paint job yet.
+
+- **Archive:** Putting a project on ice. It's not deleted — all your work is still there. It's just frozen. Nobody (including you) can change it until you unfreeze it. Think of it like putting a car in storage with a cover on it.
+
+- **SaaS:** Software as a Service. A product people pay you monthly to use (like Netflix or Spotify, but for a tool).
+
+- **API:** A way for your software to talk to other software. Like a drive-through window — other programs pull up, place an order, and get data back.
+
+- **CLI:** Command Line Interface. A way to use your software by typing commands instead of clicking buttons.
 
 ---
 
-## 2. Content_Shield
-
-| | |
-|---|---|
-| **What it is** | Pre-publication AI content validation platform (SaaS). Branded as "Joshua 7." Validates content before publishing — flags AI-generated text, checks authenticity, ensures compliance. |
-| **Language** | Python |
-| **Real code?** | Yes — full MVP with content validators, API, CLI. Security hardened (timing-safe auth, rate limiting, audit logging). 27 branches. |
-| **Status** | MVP shipped and merged. Security hardening merged. Additional PRs open. |
-| **Recommendation** | **KEEP** — This is one of your two strongest projects. Has a real market (see your own market analysis). MVP is done. |
-
-- [ ] Action: Keep. Close stale PRs. Consider whether this or `joshua7` should be the primary repo (see #3).
+## Your 8 Projects — One By One
 
 ---
 
-## 3. joshua7
+### 1. Iron-Forge-Studios (you're looking at this one right now)
 
-| | |
-|---|---|
-| **What it is** | Standalone branded version of Content Shield. |
-| **Language** | Python |
-| **Real code?** | Likely minimal — initialized Feb 18 as a separate branded repo. |
-| **Status** | Main branch only. |
-| **Recommendation** | **MERGE or DELETE** — Having two repos for the same project creates confusion. Pick one. |
+**What is it in plain English?**
+This is your home base. It has two things in it:
+- A **Roblox game** called "Palm Springs Paradise" — a desert-themed game where players collect eggs, build oases, and heist each other. It has a full money system, anti-cheating protection, and 36 game files.
+- **Business documents** — an investor pitch and a weekly summary of all your work.
 
-- [ ] Action: If `joshua7` has unique code, merge it into `Content_Shield`. If it's just a copy or empty, delete it.
+**Is there real work in here?** Yes. A LOT. The game is basically built — it just needs art, sound effects, and testing with real players.
 
----
-
-## 4. Gemini-discovers-Diamonds
-
-| | |
-|---|---|
-| **What it is** | Roblox tycoon development platform. Contains automated tycoon studio capabilities, Iron Forge CLI tool, and various prototypes. |
-| **Language** | Luau (Roblox) |
-| **Real code?** | Yes — 17 branches, PR for art direction prototype, multiple feature branches for CLI and execution engine. |
-| **Status** | Active development. Open issues for event-driven architecture, video tools, and Redis scaling. |
-| **Recommendation** | **KEEP or ARCHIVE** — Depends on whether you're still building this alongside PSP, or if PSP replaced it. |
-
-- [ ] Action: If PSP (in Iron-Forge-Studios) is your main Roblox game, consider archiving this unless it serves a different purpose.
+**What should you do?** **KEEP IT.** This is one of your two best projects.
 
 ---
 
-## 5. Faceless_Shorts
+### 2. Content_Shield
 
-| | |
-|---|---|
-| **What it is** | YouTube Shorts automation tool. Generates faceless YouTube Shorts content. |
-| **Language** | Python |
-| **Real code?** | Yes — 5 branches including Python conversion and studio backdrop generation. |
-| **Status** | In development. Being converted to Python via Claude Code. |
-| **Recommendation** | **KEEP or ARCHIVE** — If YouTube automation is still a priority, keep it. If not, archive. |
+**What is it in plain English?**
+A tool that checks writing BEFORE it gets published. It can detect if something was written by AI, flag problems, and make sure content is legit. Think of it like a spell-checker, but instead of catching typos, it catches fake or sketchy content.
 
-- [ ] Action: Decide if YouTube automation is in your current plans. If yes, keep. If not, archive (you can always unarchive later).
+**Is there real work in here?** Yes. The tool works. It has a working product with security built in. It's your most complete software project.
+
+**What should you do?** **KEEP IT.** This is your other best project. It's in a market where companies will pay monthly for this kind of tool.
 
 ---
 
-## 6. yt-autopilot
+### 3. joshua7
 
-| | |
-|---|---|
-| **What it is** | End-to-end YouTube video generation pipeline — topic to upload in one command. |
-| **Language** | Python |
-| **Real code?** | Likely minimal — main branch only, initialized Feb 16. |
-| **Status** | Early stage / concept. |
-| **Recommendation** | **MERGE or DELETE** — If this overlaps with Faceless_Shorts, consolidate. If it's empty, delete. |
+**What is it in plain English?**
+This is supposed to be a "branded" version of Content Shield (same project, different name). But it's basically an empty copy.
 
-- [ ] Action: Check if this has unique code. If so, merge into Faceless_Shorts. If empty, delete.
+**Is there real work in here?** Probably not. It was created as a second home for Content Shield but nothing really got built here.
+
+**What should you do?** **DELETE IT.** It's a duplicate that just adds confusion. Content_Shield is the real one.
 
 ---
 
-## 7. 55-_AI_Intergration
+### 4. Gemini-discovers-Diamonds
 
-| | |
-|---|---|
-| **What it is** | AI bridge sync functionality. TypeScript project. |
-| **Language** | TypeScript |
-| **Real code?** | Unknown — single development branch, no main branch. |
-| **Status** | Development-only. No PRs, no main branch. |
-| **Recommendation** | **ARCHIVE or DELETE** — No main branch and unclear purpose suggests this was experimental. |
+**What is it in plain English?**
+Another Roblox project. This was your earlier Roblox work before you built Palm Springs Paradise. It has some prototype stuff, a CLI tool, and documentation about building Roblox games with AI assistance.
 
-- [ ] Action: Check the branch for useful code. If there's something worth saving, push it to main and archive. If not, delete.
+**Is there real work in here?** Yes, there's code across 17 branches. But it overlaps with the game you already have in Iron-Forge-Studios.
+
+**What should you do?** **ARCHIVE IT.** (Put it on ice.) You already have a better, more complete Roblox game in Iron-Forge-Studios. You don't need two. But don't delete it — there might be useful pieces you want to grab later.
 
 ---
 
-## 8. FreeLance
+### 5. Faceless_Shorts
 
-| | |
-|---|---|
-| **What it is** | Freelance platform. |
-| **Language** | None |
-| **Real code?** | No — placeholder, no code pushed. |
-| **Status** | Empty. |
-| **Recommendation** | **DELETE** — Empty placeholder. You can recreate it if you ever start this project. |
+**What is it in plain English?**
+A tool to automatically make YouTube Shorts videos without showing your face. It would generate the video content for you.
 
-- [ ] Action: Delete. No code to lose.
+**Is there real work in here?** Some — it's partially built with 5 branches of work.
+
+**What should you do?** **YOUR CALL.** If you still want to do YouTube automation, keep it. If not, archive it. You can always unfreeze it later.
 
 ---
 
-## Summary: Quick Decision Table
+### 6. yt-autopilot
 
-| # | Repo | Real Code? | Recommendation | Priority |
-|---|------|-----------|----------------|----------|
-| 1 | Iron-Forge-Studios | Yes (36 files) | **KEEP** | High — your main hub + PSP game |
-| 2 | Content_Shield | Yes (full MVP) | **KEEP** | High — your strongest SaaS project |
-| 3 | joshua7 | Minimal | **MERGE → Content_Shield or DELETE** | Low |
-| 4 | Gemini-discovers-Diamonds | Yes (17 branches) | **KEEP or ARCHIVE** | Medium — you decide |
-| 5 | Faceless_Shorts | Yes (5 branches) | **KEEP or ARCHIVE** | Medium — you decide |
-| 6 | yt-autopilot | Minimal | **MERGE → Faceless_Shorts or DELETE** | Low |
-| 7 | 55-_AI_Intergration | Unknown | **ARCHIVE or DELETE** | Low |
-| 8 | FreeLance | No | **DELETE** | Low |
+**What is it in plain English?**
+Another YouTube video tool. You type in a topic, and it's supposed to make a whole video and upload it. Very similar idea to Faceless_Shorts.
+
+**Is there real work in here?** Almost nothing. Just the empty folder was set up.
+
+**What should you do?** **DELETE IT.** It does the same thing as Faceless_Shorts but has no code in it. No reason to keep two.
 
 ---
 
-## Suggested Focus (If You Want to Stop Feeling Scattered)
+### 7. 55-_AI_Intergration
 
-If you narrow down to **2 projects max**, you'll move 10x faster:
+**What is it in plain English?**
+Some kind of AI connection/sync tool. Honestly, even from the records, it's not super clear what this was supposed to be. It was an experiment.
 
-1. **Content Shield** — Your SaaS play. MVP is done. Next step: get users.
-2. **Palm Springs Paradise** — Your game play. Prototype is done. Next step: VFX/sound, then launch on Roblox.
+**Is there real work in here?** Unknown. There's one branch with some work, but no finished product.
 
-Everything else can be archived. Archived repos aren't deleted — they're frozen. You can come back to them anytime.
+**What should you do?** **DELETE IT.** If you don't know what it does, and it has no finished product, it's just adding to the noise.
 
 ---
 
-## How to Archive a Repo on GitHub
+### 8. FreeLance
 
-1. Go to the repo on GitHub
-2. Click **Settings** (tab at the top)
-3. Scroll to the bottom → **Danger Zone**
+**What is it in plain English?**
+Was going to be a freelance platform. Like a personal Fiverr or Upwork.
+
+**Is there real work in here?** No. Completely empty. Not a single file.
+
+**What should you do?** **DELETE IT.** Nothing to lose. If you ever want to build this, you can make a new one in 5 seconds.
+
+---
+
+## The Big Picture — Your Cheat Sheet
+
+| # | Project | What It Is | Real Work? | Do This |
+|---|---------|-----------|-----------|---------|
+| 1 | **Iron-Forge-Studios** | Roblox game + home base | YES | **KEEP** |
+| 2 | **Content_Shield** | AI content checking tool | YES | **KEEP** |
+| 3 | joshua7 | Empty duplicate of #2 | No | **DELETE** |
+| 4 | Gemini-discovers-Diamonds | Older Roblox work | Some | **ARCHIVE** (freeze it) |
+| 5 | Faceless_Shorts | YouTube video maker | Some | **You decide — keep or freeze** |
+| 6 | yt-autopilot | Empty YouTube tool | No | **DELETE** |
+| 7 | 55-_AI_Intergration | Unknown experiment | Unclear | **DELETE** |
+| 8 | FreeLance | Empty placeholder | No | **DELETE** |
+
+---
+
+## The Bottom Line
+
+**You have 2 real projects.** Everything else is either empty, a duplicate, or an experiment that didn't go anywhere. That's not failure — that's what it looks like when someone moves fast and tries a lot of things.
+
+The plan:
+1. **Keep** Iron-Forge-Studios (your Roblox game) and Content_Shield (your AI tool)
+2. **Freeze** Gemini-discovers-Diamonds (and maybe Faceless_Shorts)
+3. **Delete** the empty/duplicate ones (joshua7, yt-autopilot, 55-_AI_Intergration, FreeLance)
+
+After cleanup, you go from 8 scattered projects to **2 focused ones.** That's how you get out of the quicksand.
+
+---
+
+## How to Archive (Freeze) a Project on GitHub
+
+1. Go to the project's page on GitHub (github.com/OBHitting3/whatever-the-name-is)
+2. Click the **Settings** tab at the top of the page
+3. Scroll ALL the way down to the red section called **Danger Zone**
 4. Click **Archive this repository**
-5. Confirm
+5. Type the name to confirm, then click the button
 
-Archived repos become read-only. All code, issues, and PRs are preserved. You can unarchive at any time.
+That's it. Your code is safe. It's just frozen until you decide to unfreeze it.
+
+## How to Delete a Project on GitHub
+
+1. Go to the project's page on GitHub
+2. Click the **Settings** tab
+3. Scroll ALL the way down to **Danger Zone**
+4. Click **Delete this repository**
+5. Type the name to confirm
+
+Gone. But only do this for the empty ones where there's nothing to lose.
 
 ---
 
-*Generated March 20, 2026 — Iron Forge Studios repo cleanup guide*
+*You're not stuck. You're just carrying too many cars on the trailer. Let's drop the ones that don't run and focus on the two that do.*
