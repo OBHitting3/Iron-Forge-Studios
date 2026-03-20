@@ -1,105 +1,78 @@
 # Windsurf Recon Prompt
 
 ## What This Is
-Karl (OBHitting3) is doing a full audit of his dev environment. He's got 8 GitHub repos, fragments everywhere, and needs to know exactly what Windsurf/Codeium can see and has been doing. Nothing is broken or hacked — he just moved fast and needs to map the mess.
+Karl (GitHub: OBHitting3) is doing a full inventory of his dev setup. He's got 8 repos, things are scattered everywhere, and he needs to know what Windsurf specifically can see and has been doing. Nothing is broken or hacked — he just moved fast and needs to get organized.
 
-## Where To Paste This
-Open Windsurf. Open the Cascade AI panel (the chat sidebar). Paste everything below the line into Cascade. Let it run.
+## How To Use This
+1. Open Windsurf
+2. Open Cascade (the AI chat panel)
+3. Paste everything below the line into Cascade
+4. Let it run
+5. Copy the full response and save it to a file called `windsurf-recon-report.md` in your Iron-Forge-Studios/docs/ folder so you can bring it back
 
 ---
 
-I need you to do a full recon of everything you can see and access from this Windsurf installation. I'm auditing my entire dev setup — nothing is wrong, I just need to know what's where. Go through every single item below and report what you find. If you can't access something, say so — don't skip it.
+## PASTE EVERYTHING BELOW THIS LINE INTO WINDSURF CASCADE
 
-## 1. Workspaces
-- List every workspace you currently have open.
-- List every project in your recent history — anything that shows up under File > Open Recent or in the welcome screen.
-- For each one, show the full folder path.
+I need you to do a full inventory of everything you can see and access from where you're sitting. I'm cleaning up my setup — nothing is broken, I just need to know what's here. Go through each section below and report what you find. If you can't access something, say so — that's useful info too.
 
-## 2. Windsurf Rules
-- Check for `.windsurfrules` files in the current workspace and any workspace you can reach.
-- If any exist, show me the full contents.
-- Also check for any `.windsurf/` directories and list what's inside.
-- Check for a global Windsurf rules file too, if that exists.
+Format your response as a structured report with clear headers for each section.
 
-## 3. Extensions
-- List every extension installed in this Windsurf instance.
-- For each one: name, version, enabled or disabled.
-- Flag any AI-related extensions — Copilot, Claude, anything overlapping with Codeium's built-in features.
+### 1. Workspaces and Projects
+- What workspace/folder am I currently in?
+- What other workspaces or projects does Windsurf know about? Check recent folders, recent workspaces, or any workspace history you can access.
+- Are there multiple workspaces configured?
 
-## 4. Accounts
-- What account is logged into Windsurf right now?
-- What Codeium account is connected? What email? What tier (free, pro, etc.)?
-- Is there a GitHub account connected? Which one?
-- Are there multiple accounts or profiles configured anywhere?
+### 2. Windsurf Rules
+- Check for `.windsurfrules` files in the current workspace root and any subdirectories.
+- Check for any `.windsurf/` directories.
+- Check for any `rules/` or `.rules/` directories that Windsurf uses.
+- If any rules files exist, show me their full contents.
 
-## 5. Repos and Folders
-- List every repo or folder you have access to from this Windsurf installation.
-- For each one: full path, remote URL if it's a git repo, current branch, uncommitted changes.
-- Check git config (name and email) for each repo — I want to know if different repos have different identities.
+### 3. Git Repos and Branches
+- What git repo is the current workspace connected to?
+- List ALL branches (local and remote) for every repo you can see.
+- Show the remote URLs (origin, upstream, etc.) for each repo.
+- What's the status of each repo — clean, dirty, uncommitted changes?
 
-## 6. Cascade Conversation History
-- List the topics/titles of ALL Cascade conversations you have stored.
-- For each one: the date, a one-line summary of what was discussed, and which workspace or project it was connected to.
-- Go back as far as the history allows.
-- I need the full list — don't summarize or skip older ones.
+### 4. Extensions
+- List every extension installed in Windsurf.
+- Flag any AI-related extensions specifically (Copilot, Claude, Codeium, etc.).
+- Note any extensions that overlap or conflict with Windsurf's built-in AI features.
 
-## 7. Settings and Configuration
-- Dump the full contents of Windsurf's settings/configuration file (the equivalent of settings.json).
-- If there are user-level and workspace-level settings, show both.
-- Flag anything that looks custom or non-default.
+### 5. Accounts and Login
+- What account am I logged into Windsurf with?
+- What Codeium account is connected (email, username, plan tier)?
+- Is there more than one profile or account configured?
+- What GitHub account(s) are connected?
+- Are there any other service accounts linked (Google, GitLab, etc.)?
 
-## 8. Codeium Account Settings
-- Show all Codeium-specific settings and configuration.
-- What language servers or features are enabled?
-- Is there a Codeium API key or token stored? (Don't show the full key — just confirm yes/no and show first/last 4 characters.)
-- What Codeium features are turned on (autocomplete, chat, search, etc.)?
+### 6. Cascade Conversation History
+- List the topics or titles of my recent Cascade conversations.
+- How far back does the history go?
+- Are there conversations tied to different workspaces or projects?
+- Were any conversations about setting up repos, configuring things, or creating projects? Summarize those briefly.
 
-## 9. API Keys and Integrations
-- Check for any configured API keys in settings — OpenAI, Anthropic, or anything else.
-- Don't show full keys — just tell me which services have keys and first/last 4 characters.
-- Check for any other integrations (Jira, Linear, Notion, GitHub, etc.).
+### 7. Settings and Configuration
+- Dump the full contents of Windsurf's settings (the user-level settings.json or equivalent).
+- Check for workspace-level settings too.
+- What AI model is configured as the default?
+- What features are turned on or off (autocomplete, inline suggestions, etc.)?
 
-## How To Format Your Response
+### 8. API Keys and Integrations
+- Are there any API keys configured in Windsurf settings? (Don't show the actual key values — just tell me what services have keys set up.)
+- Is Codeium using its own API key or the built-in subscription?
+- Any integrations with external services configured?
 
-Structure your response exactly like this:
+### 9. File Access
+- What folders and files can you currently see and access?
+- Run a quick check — can you see files outside the current workspace?
+- List the top-level structure of the current workspace.
 
-```
-=== WINDSURF RECON REPORT ===
-Date: [today's date]
-Machine: [computer name/OS]
+### 10. Anything Else
+- Anything weird, duplicated, or out of place that you notice?
+- Multiple configs pointing to different things?
+- Settings that look like they were auto-generated vs. manually set?
+- Any sign of other AI tools having left config files behind?
 
---- WORKSPACES ---
-[findings]
-
---- WINDSURF RULES ---
-[findings]
-
---- EXTENSIONS ---
-[findings]
-
---- ACCOUNTS ---
-[findings]
-
---- REPOS & FOLDERS ---
-[findings]
-
---- CASCADE CONVERSATION HISTORY ---
-[findings]
-
---- SETTINGS DUMP ---
-[findings]
-
---- CODEIUM SETTINGS ---
-[findings]
-
---- API KEYS & INTEGRATIONS ---
-[findings]
-
---- THINGS I COULDN'T ACCESS ---
-[list anything you were blocked from checking]
-
---- RED FLAGS OR ODDITIES ---
-[anything that looks weird, duplicated, or worth investigating]
-```
-
-After you generate the report, save it to a file called `windsurf-recon-report.md` in the current workspace so I can grab it later.
+Put it all in one clean report. Be thorough. If a section comes up empty, say "Nothing found" — don't skip it.
