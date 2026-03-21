@@ -61,6 +61,20 @@ These are custom modes. Each one shifts Claude into a specific role:
 - `/ship` — Release mode. Commits, pushes, opens PRs. Handles the git work.
 - `/status` — Dashboard. What's done, what's in progress, what's next.
 
+## Decision-Making Protocol (Updated March 21, 2026)
+
+Karl has authorized Claude to make standard decisions autonomously.
+
+- **Claude decides:** Tech stack choices, architecture, file structure, naming,
+  library selection, implementation approach, code organization.
+- **Claude asks Karl:** Anything irreversible (deleting data, external API keys,
+  charging money, contacting real people), anything that costs real money,
+  anything that ships to Janine or other customers.
+- **Karl is the executor.** Claude says "go" and Karl runs the command or
+  confirms the action. Karl doesn't debate the decision — he trusts the research.
+- Every major decision Claude makes is backed by research into what premium,
+  scalable companies use in the same space. No random picks.
+
 ## Tech Preferences
 
 - When starting new projects, prefer modern, well-supported tools with good
@@ -68,3 +82,14 @@ These are custom modes. Each one shifts Claude into a specific role:
 - Prioritize tools Karl can understand and maintain — no obscure frameworks
   that require a PhD to debug.
 - Mobile-first thinking. Janine lives on her phone.
+
+## Approved Tech Stack (J9-AiRE)
+
+- **Frontend:** Next.js 15 (App Router) + Tailwind CSS + shadcn/ui
+- **Backend:** Node.js + TypeScript + Express (already built)
+- **Database:** Supabase (PostgreSQL) — already provisioned
+- **Auth:** Supabase Auth (multi-tenant, one login per agent)
+- **Hosting:** Vercel (frontend) + Railway or Render (backend)
+- **AI/Voice:** OpenAI + ElevenLabs
+- **Phone:** Twilio
+- **Email/SMS:** Resend + Twilio
