@@ -8,24 +8,26 @@ This is home base. Everything falls under here.
 Iron-Forge-Studios/
 │
 ├── projects/
-│   ├── content-shield/     ← AI content checking tool (Joshua 7)
-│   └── palm-springs-paradise/  ← Roblox game
+│   ├── aire/                  ← Janine Stevens' luxury real estate AI platform (ACTIVE SPRINT)
+│   ├── content-shield/        ← AI content checking tool (ON HOLD)
+│   └── palm-springs-paradise/ ← Roblox game (ON HOLD)
 │
-├── website/                ← The Iron Forge Studios website (Prompt Forge)
-│
-└── docs/                   ← Business documents, market analysis, notes
+└── docs/                      ← Recon prompts and system maps
 ```
 
-## The Two Main Projects
+## Active Sprint — AiRE (J9-AiRE)
 
-### 1. Content Shield (Joshua 7)
-A tool that checks writing BEFORE it gets published. Detects AI-generated content, flags problems, makes sure content is legit. Think spell-checker, but for fake content.
+AI-powered relationship platform for Janine Stevens, a top 1% luxury realtor in Palm Springs. The app answers her phone in her voice, manages client relationships, and sends the right message to the right person at the right time.
 
-### 2. Palm Springs Paradise — Steal the Oasis
-A Roblox game. Desert-themed. Players collect eggs, build oases, heist each other. Full money system, anti-cheating, 36 game files. Prototype is done.
+**Sprint started:** March 19, 2026
+**Deadline:** ~April 18, 2026
 
-## Status
+Design specs and handoff docs are in `projects/aire/`.
 
-- **Content Shield:** Code needs to be moved here from the Content_Shield repo
-- **Palm Springs Paradise:** Code is here and organized
-- **Other old repos:** Being cleaned up and consolidated
+## On Hold
+
+### Content Shield (Joshua 7)
+AI content validation tool. Code lives in the separate Content_Shield repo.
+
+### Palm Springs Paradise
+Roblox game. Prototype done. Parked until the sprint is finished.
