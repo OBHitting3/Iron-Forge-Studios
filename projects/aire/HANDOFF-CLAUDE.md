@@ -131,63 +131,9 @@ That quote IS the spec. J9-AiRE replaces two underperforming assistants (~$80K�
 | 11Labs | Voice cloning for Janine's communication style (Module 2) |
 | Supabase | Client data storage (project ID confirmed above) |
 | Stripe | Recurring billing |
-| Gumroad | Post-Janine expansion path (DIY Setup Kit at $997 one-time) |
 
 ---
 
-## 7. SSOT Document History
+## 7. Status
 
-A `J9-AIRE_SSOT.md` file was produced March 18, 2026. Two versions in same session:
-
-- **v1:** White-glove AI client management system (protection framing)
-- **v2 (final):** Rebuilt around the digital twin / virtual assistant clone concept after Karl clarified the assistant replacement angle. This is the final architecture.
-
-Original file was at `/mnt/user-data/outputs/J9-AIRE_SSOT.md` — container resets between sessions, so it didn't persist.
-
----
-
-## 8. Pivot Points
-
-**Confirmed pivot in this thread:**
-- V1 framing: "White-glove AI client management system" (feature-centric)
-- V2 framing: "100% AI clone of Janine that replaces her two assistants" (ROI-centric, replacement framing)
-- Trigger: Karl revealed the Janine quote about assistants doing nothing. Changed the product identity from a tool to a person-replacement.
-
-**Prior threads (partial — confirmed to exist but not fully recoverable):**
-- A one-pager HTML was built in a prior session (referenced but not found)
-- Six modules were discussed across at least 3 separate threads before SSOT
-- Pricing range of $1,500–$5,000 was locked before this thread started
-
----
-
-## 9. What Was Actually Built vs. Designed
-
-### Built (outputs exist):
-- J9-AIRE_SSOT.md — v2, complete (March 18, 2026)
-- Competitive positioning table (fully researched)
-- Client credential wall (Phil Knight, Glenn Frey, Kyle Richards)
-- 30-day onboarding timeline
-- Call script (3 sentences)
-- Market TAM analysis
-
-### Designed but not yet built:
-- One-page service agreement (next step after Janine call)
-- Any actual software — no code written for J9-AiRE
-- Gumroad listing (Month 2 plan)
-- White-label version for national rollout
-
----
-
-## 10. Next Steps (as of March 18, 2026)
-
-1. **Karl calls Janine.** Script: "Janine, you've spent 37 years building something rare — clients who trust you like family. I built something that protects that. It's a custom AI that runs your client relationships exactly the way you would, so nothing falls through the cracks while you start slowing down." Then stop. Let her ask price.
-2. When she says yes → send the one-page service agreement (not yet built)
-3. 30-day onboarding begins → Memory Vault first
-4. Day 31 → first Stripe invoice ($3K target)
-5. Month 2 → Gumroad DIY Kit version
-
----
-
-## Status Flag
-
-**Zero code written.** This is a fully designed product with a locked SSOT, a paying-intent customer, and a defined onboarding sequence. The next physical deliverable is the one-page service agreement. Everything after that is build-to-spec.
+**Zero code written.** Fully designed product. Everything from here is build-to-spec.
