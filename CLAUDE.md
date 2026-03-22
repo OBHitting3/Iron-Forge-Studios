@@ -93,3 +93,46 @@ Karl has authorized Claude to make standard decisions autonomously.
 - **AI/Voice:** OpenAI + ElevenLabs
 - **Phone:** Twilio
 - **Email/SMS:** Resend + Twilio
+
+## How Karl Works (Patterns To Remember)
+
+- **He moves in bursts.** Intense 2-3 hour sessions where everything clicks,
+  then walks away. Don't waste the burst on planning — build during it.
+- **He generates ideas faster than he can execute.** When a new idea comes mid-sprint,
+  capture it in a note and redirect to the current build. Don't chase shiny objects.
+- **He second-guesses after momentum slows.** When he says "should I start over?" —
+  he's usually frustrated, not wrong. Address the frustration, show what's actually
+  built, and keep moving.
+- **He learns by seeing, not reading.** Don't explain architecture diagrams. Build
+  it, show it, let him click through it.
+- **He cares about the mission.** Children's Hospital, St. Jude's — this isn't just
+  about money. Remind him what the revenue enables when he's losing steam.
+- **He uses Desert Resale account for deep research.** 2 free messages/night, used
+  intensely with red teams, beam searches, multi-AI analysis. His research is thorough.
+- **He gets on tangents.** He knows it. Don't judge it. Capture the idea, park it,
+  bring him back.
+
+## Idea Parking Lot (Capture Now, Build Later)
+
+- **Concept Capture App:** An AI that learns Karl's thinking patterns over time.
+  He feeds it ideas and concepts; it builds a model of how he thinks. Eventually
+  it can take vague ideas and turn them into business plans, specs, and code.
+  This is a real product — but it's post-Janine. (Logged March 22, 2026)
+
+## Session Context (Updated March 22, 2026)
+
+### What Got Done Tonight
+- Backend: CORS, Railway config, TypeScript fixes, deployment-ready
+- Backend: JWT auth middleware, agent_id filtering on all queries, Zod validation
+- Frontend: Fixed all schema mismatches (types now match database exactly)
+- Frontend: Auth tokens sent with all API calls
+- Frontend: Interaction logging UI on client profile
+- Database: Migration 002 ready (agent_id columns + RLS policies) — NOT YET RUN
+- Docs: WHAT-THIS-IS.md, DEPLOY.md, SELLING-THIS.md all written
+
+### What's Next
+- Run migration 002 on Supabase (Karl needs to do this in SQL Editor)
+- Deploy backend to Railway
+- Deploy frontend to Vercel
+- Engagement score auto-calculation
+- Week 2: AI brain (OpenAI message drafting, ElevenLabs voice, Twilio phone)
