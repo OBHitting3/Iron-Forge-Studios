@@ -133,8 +133,8 @@ export default function CsvImporter() {
   async function handleImport() {
     setStep('importing')
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    const agentId = user?.id ?? ''
+    const { data: { session } } = await supabase.auth.getSession()
+    const token = session?.access_token ?? ''
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
 
     let success = 0
@@ -147,8 +147,11 @@ export default function CsvImporter() {
       try {
         const res = await fetch(`${apiUrl}/api/clients`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...client, agent_id: agentId }),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify(client),
         })
         if (res.ok) success++
         else failed++

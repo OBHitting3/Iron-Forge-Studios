@@ -3,10 +3,22 @@ import type { Client, CreateClientInput, Interaction, Milestone, Transaction } f
 
 // ── Clients ──
 
-export async function createClient(input: CreateClientInput): Promise<Client> {
+export async function listClients(agentId: string): Promise<Client[]> {
   const { data, error } = await supabase
     .from("clients")
-    .insert(input)
+    .select()
+    .eq("agent_id", agentId)
+    .eq("is_active", true)
+    .order("last_name");
+
+  if (error) throw new Error(`Failed to list clients: ${error.message}`);
+  return data;
+}
+
+export async function createClient(agentId: string, input: CreateClientInput): Promise<Client> {
+  const { data, error } = await supabase
+    .from("clients")
+    .insert({ ...input, agent_id: agentId })
     .select()
     .single();
 
@@ -14,21 +26,23 @@ export async function createClient(input: CreateClientInput): Promise<Client> {
   return data;
 }
 
-export async function getClient(id: string): Promise<Client> {
+export async function getClient(agentId: string, id: string): Promise<Client> {
   const { data, error } = await supabase
     .from("clients")
     .select()
     .eq("id", id)
+    .eq("agent_id", agentId)
     .single();
 
   if (error) throw new Error(`Client not found: ${error.message}`);
   return data;
 }
 
-export async function searchClients(query: string): Promise<Client[]> {
+export async function searchClients(agentId: string, query: string): Promise<Client[]> {
   const { data, error } = await supabase
     .from("clients")
     .select()
+    .eq("agent_id", agentId)
     .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%`)
     .order("last_name");
 
@@ -36,11 +50,12 @@ export async function searchClients(query: string): Promise<Client[]> {
   return data;
 }
 
-export async function updateClient(id: string, updates: Partial<CreateClientInput>): Promise<Client> {
+export async function updateClient(agentId: string, id: string, updates: Partial<CreateClientInput>): Promise<Client> {
   const { data, error } = await supabase
     .from("clients")
     .update(updates)
     .eq("id", id)
+    .eq("agent_id", agentId)
     .select()
     .single();
 
@@ -48,10 +63,11 @@ export async function updateClient(id: string, updates: Partial<CreateClientInpu
   return data;
 }
 
-export async function getClientsNeedingFollowup(): Promise<Client[]> {
+export async function getClientsNeedingFollowup(agentId: string): Promise<Client[]> {
   const { data, error } = await supabase
     .from("clients")
     .select()
+    .eq("agent_id", agentId)
     .lte("next_followup_date", new Date().toISOString())
     .eq("is_active", true)
     .order("next_followup_date");
@@ -60,13 +76,14 @@ export async function getClientsNeedingFollowup(): Promise<Client[]> {
   return data;
 }
 
-export async function getDormantClients(daysSinceContact: number): Promise<Client[]> {
+export async function getDormantClients(agentId: string, daysSinceContact: number): Promise<Client[]> {
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - daysSinceContact);
 
   const { data, error } = await supabase
     .from("clients")
     .select()
+    .eq("agent_id", agentId)
     .lt("last_contact_date", cutoff.toISOString())
     .eq("is_active", true)
     .order("last_contact_date");
@@ -77,10 +94,10 @@ export async function getDormantClients(daysSinceContact: number): Promise<Clien
 
 // ── Interactions ──
 
-export async function logInteraction(input: Omit<Interaction, "id" | "created_at">): Promise<Interaction> {
+export async function logInteraction(agentId: string, input: Record<string, unknown>): Promise<Interaction> {
   const { data, error } = await supabase
     .from("interactions")
-    .insert(input)
+    .insert({ ...input, agent_id: agentId })
     .select()
     .single();
 
@@ -90,16 +107,18 @@ export async function logInteraction(input: Omit<Interaction, "id" | "created_at
   await supabase
     .from("clients")
     .update({ last_contact_date: new Date().toISOString() })
-    .eq("id", input.client_id);
+    .eq("id", input.client_id as string)
+    .eq("agent_id", agentId);
 
   return data;
 }
 
-export async function getClientInteractions(clientId: string, limit = 20): Promise<Interaction[]> {
+export async function getClientInteractions(agentId: string, clientId: string, limit = 20): Promise<Interaction[]> {
   const { data, error } = await supabase
     .from("interactions")
     .select()
     .eq("client_id", clientId)
+    .eq("agent_id", agentId)
     .order("created_at", { ascending: false })
     .limit(limit);
 
@@ -109,10 +128,10 @@ export async function getClientInteractions(clientId: string, limit = 20): Promi
 
 // ── Milestones ──
 
-export async function addMilestone(input: Omit<Milestone, "id" | "created_at">): Promise<Milestone> {
+export async function addMilestone(agentId: string, input: Record<string, unknown>): Promise<Milestone> {
   const { data, error } = await supabase
     .from("milestones")
-    .insert(input)
+    .insert({ ...input, agent_id: agentId })
     .select()
     .single();
 
@@ -120,7 +139,7 @@ export async function addMilestone(input: Omit<Milestone, "id" | "created_at">):
   return data;
 }
 
-export async function getUpcomingMilestones(daysAhead: number): Promise<(Milestone & { client: Client })[]> {
+export async function getUpcomingMilestones(agentId: string, daysAhead: number): Promise<(Milestone & { client: Client })[]> {
   const now = new Date();
   const future = new Date();
   future.setDate(future.getDate() + daysAhead);
@@ -128,6 +147,7 @@ export async function getUpcomingMilestones(daysAhead: number): Promise<(Milesto
   const { data, error } = await supabase
     .from("milestones")
     .select("*, client:clients(*)")
+    .eq("agent_id", agentId)
     .gte("milestone_date", now.toISOString().split("T")[0])
     .lte("milestone_date", future.toISOString().split("T")[0])
     .order("milestone_date");
@@ -138,10 +158,10 @@ export async function getUpcomingMilestones(daysAhead: number): Promise<(Milesto
 
 // ── Transactions ──
 
-export async function createTransaction(input: Omit<Transaction, "id" | "created_at" | "updated_at">): Promise<Transaction> {
+export async function createTransaction(agentId: string, input: Record<string, unknown>): Promise<Transaction> {
   const { data, error } = await supabase
     .from("transactions")
-    .insert(input)
+    .insert({ ...input, agent_id: agentId })
     .select()
     .single();
 
@@ -149,11 +169,12 @@ export async function createTransaction(input: Omit<Transaction, "id" | "created
   return data;
 }
 
-export async function getClientTransactions(clientId: string): Promise<Transaction[]> {
+export async function getClientTransactions(agentId: string, clientId: string): Promise<Transaction[]> {
   const { data, error } = await supabase
     .from("transactions")
     .select()
     .eq("client_id", clientId)
+    .eq("agent_id", agentId)
     .order("created_at", { ascending: false });
 
   if (error) throw new Error(`Failed to get transactions: ${error.message}`);
@@ -162,12 +183,12 @@ export async function getClientTransactions(clientId: string): Promise<Transacti
 
 // ── Full Client Profile (everything in one call) ──
 
-export async function getFullClientProfile(clientId: string) {
+export async function getFullClientProfile(agentId: string, clientId: string) {
   const [client, interactions, milestones, transactions] = await Promise.all([
-    getClient(clientId),
-    getClientInteractions(clientId),
-    supabase.from("milestones").select().eq("client_id", clientId).order("milestone_date"),
-    getClientTransactions(clientId),
+    getClient(agentId, clientId),
+    getClientInteractions(agentId, clientId),
+    supabase.from("milestones").select().eq("client_id", clientId).eq("agent_id", agentId).order("milestone_date"),
+    getClientTransactions(agentId, clientId),
   ]);
 
   return {

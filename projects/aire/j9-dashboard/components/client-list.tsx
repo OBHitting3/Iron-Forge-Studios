@@ -75,7 +75,7 @@ export default function ClientList({ clients }: ClientListProps) {
 }
 
 function ClientCard({ client }: { client: Client }) {
-  const days = daysSince(client.last_contacted_at)
+  const days = daysSince(client.last_contact_date)
   const dotColor = engagementColor(client.engagement_score)
   const label = engagementLabel(client.engagement_score)
 

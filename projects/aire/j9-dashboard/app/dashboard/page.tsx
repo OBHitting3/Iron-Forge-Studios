@@ -4,12 +4,15 @@ import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
-async function getClients(agentId: string) {
+async function getClients(token: string) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
   try {
-    const res = await fetch(`${apiUrl}/api/clients?agent_id=${agentId}`, {
+    const res = await fetch(`${apiUrl}/api/clients`, {
       cache: 'no-store',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
     })
     if (!res.ok) return []
     const data = await res.json()
@@ -19,11 +22,12 @@ async function getClients(agentId: string) {
   }
 }
 
-async function getFollowUps(agentId: string) {
+async function getFollowUps(token: string) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
   try {
-    const res = await fetch(`${apiUrl}/api/clients/followups?agent_id=${agentId}`, {
+    const res = await fetch(`${apiUrl}/api/clients/followups`, {
       cache: 'no-store',
+      headers: { 'Authorization': `Bearer ${token}` },
     })
     if (!res.ok) return []
     const data = await res.json()
@@ -37,10 +41,11 @@ export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  const agentId = user?.id ?? ''
+  const { data: { session } } = await supabase.auth.getSession()
+  const token = session?.access_token ?? ''
   const [clients, followUps] = await Promise.all([
-    getClients(agentId),
-    getFollowUps(agentId),
+    getClients(token),
+    getFollowUps(token),
   ])
 
   return (

@@ -4,11 +4,16 @@ import { notFound } from 'next/navigation'
 export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import { formatDate, daysSince, engagementColor, engagementLabel } from '@/lib/utils'
+import type { Client, Interaction, Milestone, Transaction } from '@/types/client'
+import LogInteraction from '@/components/log-interaction'
 
-async function getClientFull(clientId: string) {
+async function getClientFull(clientId: string, token: string) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'
   try {
-    const res = await fetch(`${apiUrl}/api/clients/${clientId}/full`, { cache: 'no-store' })
+    const res = await fetch(`${apiUrl}/api/clients/${clientId}/full`, {
+      cache: 'no-store',
+      headers: { 'Authorization': `Bearer ${token}` },
+    })
     if (!res.ok) return null
     return res.json()
   } catch {
@@ -22,14 +27,16 @@ export default async function ClientProfilePage({ params }: { params: Promise<{ 
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) notFound()
 
-  const data = await getClientFull(id)
+  const { data: { session } } = await supabase.auth.getSession()
+  const data = await getClientFull(id, session?.access_token ?? '')
   if (!data) notFound()
 
-  const client = data.client ?? data
-  const interactions = data.interactions ?? []
-  const milestones = data.milestones ?? []
+  const client: Client = data.client ?? data
+  const interactions: Interaction[] = data.interactions ?? []
+  const milestones: Milestone[] = data.milestones ?? []
+  const transactions: Transaction[] = data.transactions ?? []
 
-  const days = daysSince(client.last_contacted_at)
+  const days = daysSince(client.last_contact_date)
   const dotColor = engagementColor(client.engagement_score)
   const label = engagementLabel(client.engagement_score)
 
@@ -56,7 +63,7 @@ export default async function ClientProfilePage({ params }: { params: Promise<{ 
             <div className="flex items-center gap-1.5 mt-1">
               <div className={`w-2 h-2 rounded-full ${dotColor}`} />
               <span className="text-sm" style={{ color: 'var(--muted)' }}>{label}</span>
-              {client.status === 'vip' && (
+              {client.relationship_tier === 'vip' && (
                 <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: '#3b2505', color: '#f59e0b' }}>VIP</span>
               )}
             </div>
@@ -83,6 +90,22 @@ export default async function ClientProfilePage({ params }: { params: Promise<{ 
           )}
         </div>
 
+        {/* Real estate context */}
+        {(client.interests || client.property_preferences) && (
+          <div className="mt-4 pt-4 space-y-2" style={{ borderTop: '1px solid var(--card-border)' }}>
+            {client.interests && (
+              <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                <span className="font-medium" style={{ color: 'var(--foreground)' }}>Interests:</span> {client.interests}
+              </p>
+            )}
+            {client.property_preferences && (
+              <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                <span className="font-medium" style={{ color: 'var(--foreground)' }}>Looking for:</span> {client.property_preferences}
+              </p>
+            )}
+          </div>
+        )}
+
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-3 mt-4 pt-4" style={{ borderTop: '1px solid var(--card-border)' }}>
           <div className="text-center">
@@ -101,13 +124,13 @@ export default async function ClientProfilePage({ params }: { params: Promise<{ 
       </div>
 
       {/* Follow-up date */}
-      {client.follow_up_date && (
+      {client.next_followup_date && (
         <div className="px-4 py-3 rounded-xl mb-4 flex items-center gap-2" style={{ background: '#1a1a2e', border: '1px solid var(--accent)' }}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--accent-light)' }}>
             <rect width="18" height="18" x="3" y="4" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" strokeLinecap="round" />
           </svg>
           <p className="text-sm" style={{ color: 'var(--accent-light)' }}>
-            Follow up on <strong>{formatDate(client.follow_up_date)}</strong>
+            Follow up on <strong>{formatDate(client.next_followup_date)}</strong>
           </p>
         </div>
       )}
@@ -120,15 +143,67 @@ export default async function ClientProfilePage({ params }: { params: Promise<{ 
         </div>
       )}
 
+      {/* Log Interaction */}
+      <LogInteraction clientId={client.id} />
+
+      {/* Personal details */}
+      {(client.spouse_name || client.children || client.pet_info || client.birthday) && (
+        <div className="p-4 rounded-xl mb-4" style={{ background: 'var(--card)', border: '1px solid var(--card-border)' }}>
+          <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--muted)' }}>Personal Details</p>
+          <div className="space-y-2 text-sm">
+            {client.spouse_name && (
+              <p style={{ color: 'var(--foreground)' }}><span style={{ color: 'var(--muted)' }}>Spouse:</span> {client.spouse_name}</p>
+            )}
+            {client.children && (
+              <p style={{ color: 'var(--foreground)' }}><span style={{ color: 'var(--muted)' }}>Children:</span> {client.children}</p>
+            )}
+            {client.pet_info && (
+              <p style={{ color: 'var(--foreground)' }}><span style={{ color: 'var(--muted)' }}>Pets:</span> {client.pet_info}</p>
+            )}
+            {client.birthday && (
+              <p style={{ color: 'var(--foreground)' }}><span style={{ color: 'var(--muted)' }}>Birthday:</span> {formatDate(client.birthday)}</p>
+            )}
+            {client.anniversary && (
+              <p style={{ color: 'var(--foreground)' }}><span style={{ color: 'var(--muted)' }}>Anniversary:</span> {formatDate(client.anniversary)}</p>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Milestones */}
       {milestones.length > 0 && (
         <div className="p-4 rounded-xl mb-4" style={{ background: 'var(--card)', border: '1px solid var(--card-border)' }}>
           <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--muted)' }}>Milestones</p>
           <div className="space-y-2">
-            {milestones.map((m: { id: string; label: string; date: string; type: string }) => (
+            {milestones.map((m) => (
               <div key={m.id} className="flex items-center justify-between">
-                <span className="text-sm" style={{ color: 'var(--foreground)' }}>{m.label}</span>
-                <span className="text-xs" style={{ color: 'var(--muted)' }}>{formatDate(m.date)}</span>
+                <span className="text-sm" style={{ color: 'var(--foreground)' }}>{m.title}</span>
+                <span className="text-xs" style={{ color: 'var(--muted)' }}>{formatDate(m.milestone_date)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Transactions */}
+      {transactions.length > 0 && (
+        <div className="p-4 rounded-xl mb-4" style={{ background: 'var(--card)', border: '1px solid var(--card-border)' }}>
+          <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--muted)' }}>Transactions</p>
+          <div className="space-y-3">
+            {transactions.map((t) => (
+              <div key={t.id} className="flex gap-3">
+                <div className="flex-shrink-0 w-1 rounded-full" style={{ background: t.status === 'closed' ? '#10b981' : 'var(--accent)' }} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium uppercase" style={{ color: t.status === 'closed' ? '#10b981' : 'var(--accent-light)' }}>
+                    {t.transaction_type} — {t.status}
+                  </p>
+                  <p className="text-sm mt-0.5" style={{ color: 'var(--foreground)' }}>{t.property_address}</p>
+                  {t.sale_price && (
+                    <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>
+                      ${t.sale_price.toLocaleString()}
+                    </p>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -140,13 +215,17 @@ export default async function ClientProfilePage({ params }: { params: Promise<{ 
         <div className="p-4 rounded-xl mb-4" style={{ background: 'var(--card)', border: '1px solid var(--card-border)' }}>
           <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'var(--muted)' }}>Interaction History</p>
           <div className="space-y-3">
-            {interactions.slice(0, 10).map((i: { id: string; type: string; summary: string; occurred_at: string }) => (
+            {interactions.slice(0, 10).map((i) => (
               <div key={i.id} className="flex gap-3">
                 <div className="flex-shrink-0 w-1 rounded-full" style={{ background: 'var(--accent)' }} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-medium uppercase" style={{ color: 'var(--accent-light)' }}>{i.type}</p>
-                  <p className="text-sm mt-0.5" style={{ color: 'var(--foreground)' }}>{i.summary}</p>
-                  <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>{formatDate(i.occurred_at)}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs font-medium uppercase" style={{ color: 'var(--accent-light)' }}>{i.interaction_type}</p>
+                    <p className="text-xs" style={{ color: 'var(--muted)' }}>{i.direction}</p>
+                  </div>
+                  {i.subject && <p className="text-sm font-medium mt-0.5" style={{ color: 'var(--foreground)' }}>{i.subject}</p>}
+                  {i.content && <p className="text-sm mt-0.5" style={{ color: 'var(--foreground)' }}>{i.content}</p>}
+                  <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>{formatDate(i.created_at)}</p>
                 </div>
               </div>
             ))}

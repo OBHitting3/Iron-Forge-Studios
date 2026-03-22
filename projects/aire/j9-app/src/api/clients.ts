@@ -1,5 +1,14 @@
 import { Router, Request, Response } from "express";
+import { requireAuth } from "../middleware/auth.js";
 import {
+  createClientSchema,
+  updateClientSchema,
+  logInteractionSchema,
+  addMilestoneSchema,
+  createTransactionSchema,
+} from "../validation/schemas.js";
+import {
+  listClients,
   createClient,
   getClient,
   searchClients,
@@ -17,10 +26,27 @@ import {
 
 export const clientRouter = Router();
 
+// All client routes require authentication
+clientRouter.use(requireAuth);
+
+// List all clients
+clientRouter.get("/", async (req: Request, res: Response) => {
+  try {
+    const clients = await listClients(req.agentId!);
+    res.json(clients);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Create a new client
 clientRouter.post("/", async (req: Request, res: Response) => {
   try {
-    const client = await createClient(req.body);
+    const parsed = createClientSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.issues[0].message });
+    }
+    const client = await createClient(req.agentId!, parsed.data);
     res.status(201).json(client);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -32,7 +58,7 @@ clientRouter.get("/search", async (req: Request, res: Response) => {
   try {
     const query = req.query.q as string;
     if (!query) return res.status(400).json({ error: "Query parameter 'q' required" });
-    const clients = await searchClients(query);
+    const clients = await searchClients(req.agentId!, query);
     res.json(clients);
   } catch (err: any) {
     res.status(500).json({ error: err.message });
@@ -40,9 +66,9 @@ clientRouter.get("/search", async (req: Request, res: Response) => {
 });
 
 // Get clients needing follow-up
-clientRouter.get("/followups", async (_req: Request, res: Response) => {
+clientRouter.get("/followups", async (req: Request, res: Response) => {
   try {
-    const clients = await getClientsNeedingFollowup();
+    const clients = await getClientsNeedingFollowup(req.agentId!);
     res.json(clients);
   } catch (err: any) {
     res.status(500).json({ error: err.message });
@@ -53,7 +79,7 @@ clientRouter.get("/followups", async (_req: Request, res: Response) => {
 clientRouter.get("/dormant", async (req: Request, res: Response) => {
   try {
     const days = parseInt(req.query.days as string) || 60;
-    const clients = await getDormantClients(days);
+    const clients = await getDormantClients(req.agentId!, days);
     res.json(clients);
   } catch (err: any) {
     res.status(500).json({ error: err.message });
@@ -64,7 +90,7 @@ clientRouter.get("/dormant", async (req: Request, res: Response) => {
 clientRouter.get("/milestones/upcoming", async (req: Request, res: Response) => {
   try {
     const days = parseInt(req.query.days as string) || 14;
-    const milestones = await getUpcomingMilestones(days);
+    const milestones = await getUpcomingMilestones(req.agentId!, days);
     res.json(milestones);
   } catch (err: any) {
     res.status(500).json({ error: err.message });
@@ -74,7 +100,7 @@ clientRouter.get("/milestones/upcoming", async (req: Request, res: Response) => 
 // Get a single client with full profile
 clientRouter.get("/:id/full", async (req: Request, res: Response) => {
   try {
-    const profile = await getFullClientProfile(req.params.id as string);
+    const profile = await getFullClientProfile(req.agentId!, req.params.id as string);
     res.json(profile);
   } catch (err: any) {
     res.status(404).json({ error: err.message });
@@ -84,7 +110,7 @@ clientRouter.get("/:id/full", async (req: Request, res: Response) => {
 // Get a single client
 clientRouter.get("/:id", async (req: Request, res: Response) => {
   try {
-    const client = await getClient(req.params.id as string);
+    const client = await getClient(req.agentId!, req.params.id as string);
     res.json(client);
   } catch (err: any) {
     res.status(404).json({ error: err.message });
@@ -94,7 +120,11 @@ clientRouter.get("/:id", async (req: Request, res: Response) => {
 // Update a client
 clientRouter.patch("/:id", async (req: Request, res: Response) => {
   try {
-    const client = await updateClient(req.params.id as string, req.body);
+    const parsed = updateClientSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.issues[0].message });
+    }
+    const client = await updateClient(req.agentId!, req.params.id as string, parsed.data);
     res.json(client);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -104,7 +134,11 @@ clientRouter.patch("/:id", async (req: Request, res: Response) => {
 // Log an interaction
 clientRouter.post("/:id/interactions", async (req: Request, res: Response) => {
   try {
-    const interaction = await logInteraction({ ...req.body, client_id: req.params.id as string });
+    const parsed = logInteractionSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.issues[0].message });
+    }
+    const interaction = await logInteraction(req.agentId!, { ...parsed.data, client_id: req.params.id as string });
     res.status(201).json(interaction);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -115,7 +149,7 @@ clientRouter.post("/:id/interactions", async (req: Request, res: Response) => {
 clientRouter.get("/:id/interactions", async (req: Request, res: Response) => {
   try {
     const limit = parseInt(req.query.limit as string) || 20;
-    const interactions = await getClientInteractions(req.params.id as string, limit);
+    const interactions = await getClientInteractions(req.agentId!, req.params.id as string, limit);
     res.json(interactions);
   } catch (err: any) {
     res.status(500).json({ error: err.message });
@@ -125,7 +159,11 @@ clientRouter.get("/:id/interactions", async (req: Request, res: Response) => {
 // Add a milestone
 clientRouter.post("/:id/milestones", async (req: Request, res: Response) => {
   try {
-    const milestone = await addMilestone({ ...req.body, client_id: req.params.id as string });
+    const parsed = addMilestoneSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.issues[0].message });
+    }
+    const milestone = await addMilestone(req.agentId!, { ...parsed.data, client_id: req.params.id as string });
     res.status(201).json(milestone);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -135,7 +173,11 @@ clientRouter.post("/:id/milestones", async (req: Request, res: Response) => {
 // Create a transaction
 clientRouter.post("/:id/transactions", async (req: Request, res: Response) => {
   try {
-    const transaction = await createTransaction({ ...req.body, client_id: req.params.id as string });
+    const parsed = createTransactionSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: parsed.error.issues[0].message });
+    }
+    const transaction = await createTransaction(req.agentId!, { ...parsed.data, client_id: req.params.id as string });
     res.status(201).json(transaction);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -145,7 +187,7 @@ clientRouter.post("/:id/transactions", async (req: Request, res: Response) => {
 // Get client transactions
 clientRouter.get("/:id/transactions", async (req: Request, res: Response) => {
   try {
-    const transactions = await getClientTransactions(req.params.id as string);
+    const transactions = await getClientTransactions(req.agentId!, req.params.id as string);
     res.json(transactions);
   } catch (err: any) {
     res.status(500).json({ error: err.message });
