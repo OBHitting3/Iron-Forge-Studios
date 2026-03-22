@@ -1,9 +1,11 @@
 import express from "express";
+import cors from "cors";
 import { env } from "./config/env.js";
 import { clientRouter } from "./api/clients.js";
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 // Health check

@@ -74,7 +74,7 @@ clientRouter.get("/milestones/upcoming", async (req: Request, res: Response) => 
 // Get a single client with full profile
 clientRouter.get("/:id/full", async (req: Request, res: Response) => {
   try {
-    const profile = await getFullClientProfile(req.params.id);
+    const profile = await getFullClientProfile(req.params.id as string);
     res.json(profile);
   } catch (err: any) {
     res.status(404).json({ error: err.message });
@@ -84,7 +84,7 @@ clientRouter.get("/:id/full", async (req: Request, res: Response) => {
 // Get a single client
 clientRouter.get("/:id", async (req: Request, res: Response) => {
   try {
-    const client = await getClient(req.params.id);
+    const client = await getClient(req.params.id as string);
     res.json(client);
   } catch (err: any) {
     res.status(404).json({ error: err.message });
@@ -94,7 +94,7 @@ clientRouter.get("/:id", async (req: Request, res: Response) => {
 // Update a client
 clientRouter.patch("/:id", async (req: Request, res: Response) => {
   try {
-    const client = await updateClient(req.params.id, req.body);
+    const client = await updateClient(req.params.id as string, req.body);
     res.json(client);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -104,7 +104,7 @@ clientRouter.patch("/:id", async (req: Request, res: Response) => {
 // Log an interaction
 clientRouter.post("/:id/interactions", async (req: Request, res: Response) => {
   try {
-    const interaction = await logInteraction({ ...req.body, client_id: req.params.id });
+    const interaction = await logInteraction({ ...req.body, client_id: req.params.id as string });
     res.status(201).json(interaction);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -115,7 +115,7 @@ clientRouter.post("/:id/interactions", async (req: Request, res: Response) => {
 clientRouter.get("/:id/interactions", async (req: Request, res: Response) => {
   try {
     const limit = parseInt(req.query.limit as string) || 20;
-    const interactions = await getClientInteractions(req.params.id, limit);
+    const interactions = await getClientInteractions(req.params.id as string, limit);
     res.json(interactions);
   } catch (err: any) {
     res.status(500).json({ error: err.message });
@@ -125,7 +125,7 @@ clientRouter.get("/:id/interactions", async (req: Request, res: Response) => {
 // Add a milestone
 clientRouter.post("/:id/milestones", async (req: Request, res: Response) => {
   try {
-    const milestone = await addMilestone({ ...req.body, client_id: req.params.id });
+    const milestone = await addMilestone({ ...req.body, client_id: req.params.id as string });
     res.status(201).json(milestone);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -135,7 +135,7 @@ clientRouter.post("/:id/milestones", async (req: Request, res: Response) => {
 // Create a transaction
 clientRouter.post("/:id/transactions", async (req: Request, res: Response) => {
   try {
-    const transaction = await createTransaction({ ...req.body, client_id: req.params.id });
+    const transaction = await createTransaction({ ...req.body, client_id: req.params.id as string });
     res.status(201).json(transaction);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -145,7 +145,7 @@ clientRouter.post("/:id/transactions", async (req: Request, res: Response) => {
 // Get client transactions
 clientRouter.get("/:id/transactions", async (req: Request, res: Response) => {
   try {
-    const transactions = await getClientTransactions(req.params.id);
+    const transactions = await getClientTransactions(req.params.id as string);
     res.json(transactions);
   } catch (err: any) {
     res.status(500).json({ error: err.message });
