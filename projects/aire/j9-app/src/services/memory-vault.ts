@@ -39,11 +39,15 @@ export async function getClient(agentId: string, id: string): Promise<Client> {
 }
 
 export async function searchClients(agentId: string, query: string): Promise<Client[]> {
+  // Sanitize query to prevent filter injection — remove characters that could break the Supabase filter syntax
+  const sanitized = query.replace(/[%_\\(),."']/g, "");
+  if (!sanitized) return [];
+
   const { data, error } = await supabase
     .from("clients")
     .select()
     .eq("agent_id", agentId)
-    .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,email.ilike.%${query}%`)
+    .or(`first_name.ilike.%${sanitized}%,last_name.ilike.%${sanitized}%,email.ilike.%${sanitized}%`)
     .order("last_name");
 
   if (error) throw new Error(`Search failed: ${error.message}`);

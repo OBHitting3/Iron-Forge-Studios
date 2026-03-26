@@ -7,4 +7,5 @@ export const env = {
   supabaseServiceKey: process.env.SUPABASE_SERVICE_KEY!,
   port: parseInt(process.env.PORT || "3000"),
   nodeEnv: process.env.NODE_ENV || "development",
+  corsOrigin: process.env.CORS_ORIGIN || "*",
 };

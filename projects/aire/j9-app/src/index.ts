@@ -5,7 +5,10 @@ import { clientRouter } from "./api/clients.js";
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: env.corsOrigin === "*" ? true : env.corsOrigin.split(","),
+  credentials: true,
+}));
 app.use(express.json());
 
 // Health check
