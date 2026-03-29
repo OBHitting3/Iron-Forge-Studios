@@ -177,8 +177,13 @@
           throw new Error(data.error || 'Something went wrong.');
         }
 
-        // Render the prompt with basic markdown-style headers
-        let html = data.prompt
+        function escapeHtml(str) {
+          const div = document.createElement('div');
+          div.textContent = str;
+          return div.innerHTML;
+        }
+
+        let html = escapeHtml(data.prompt)
           .replace(/^## (.+)$/gm, '<h2>$1</h2>')
           .replace(/^---$/gm, '');
 
@@ -197,7 +202,6 @@
 
     function copyPrompt() {
       const output = document.getElementById('output');
-      // Get text content without the button
       const clone = output.cloneNode(true);
       clone.querySelectorAll('button').forEach(b => b.remove());
       const text = clone.textContent.trim();
