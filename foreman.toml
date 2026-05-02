@@ -1,0 +1,7 @@
+# Foreman toolchain manager config
+# Run `foreman install` to install all tools below.
+
+[tools]
+rojo = { source = "rojo-rbx/rojo", version = "=7.4.4" }
+selene = { source = "Kampfkarren/selene", version = "0.27.1" }
+stylua = { source = "JohnnyMorganz/StyLua", version = "0.20.0" }

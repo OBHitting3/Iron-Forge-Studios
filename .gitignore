@@ -1,0 +1,35 @@
+# Roblox Studio / Rojo
+*.rbxl
+*.rbxlx
+*.rbxl.lock
+*.rbxlx.lock
+*.rbxm
+*.rbxmx
+
+# Build outputs
+*.rbxlx.tmp
+build/
+dist/
+
+# Rojo
+sourcemap.json
+
+# Wally
+Packages/
+ServerPackages/
+DevPackages/
+wally.lock
+
+# Editor
+.vscode/settings.local.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

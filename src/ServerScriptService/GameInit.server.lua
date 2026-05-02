@@ -19,6 +19,7 @@ local Services = {
     { Name = "TradeService",        Module = require(script.Parent.Services.TradeService) },
     { Name = "MonetizationService", Module = require(script.Parent.Services.MonetizationService) },
     { Name = "LeaderboardService",  Module = require(script.Parent.Services.LeaderboardService) },
+    { Name = "SettingsService",     Module = require(script.Parent.Services.SettingsService) },
 }
 
 for _, service in Services do

@@ -1,7 +1,6 @@
 --[[
     ClientInit.client.lua
-    Main client bootstrap. Initializes controllers and UI in order.
-    Place in StarterPlayerScripts.
+    Main client bootstrap. Initializes controllers, components, and UI in order.
 ]]
 
 local Players = game:GetService("Players")
@@ -10,27 +9,49 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local player = Players.LocalPlayer
 
 -- Wait for essential modules
-local Modules = ReplicatedStorage:WaitForChild("Modules")
-local Shared = Modules:WaitForChild("Shared")
+ReplicatedStorage:WaitForChild("Modules")
 
 print("[Client] Initializing Palm Springs Paradise...")
 
--- Initialize controllers in order
-local Controllers = {
-    { Name = "DataController",     Module = require(script.Parent.Controllers.DataController) },
-    { Name = "EggController",      Module = require(script.Parent.Controllers.EggController) },
-    { Name = "HeistController",    Module = require(script.Parent.Controllers.HeistController) },
-    { Name = "PlotController",     Module = require(script.Parent.Controllers.PlotController) },
-    { Name = "TradeController",    Module = require(script.Parent.Controllers.TradeController) },
-    { Name = "UIController",       Module = require(script.Parent.Controllers.UIController) },
+-- Initialize controllers and components in order.
+-- UIController must be last because panels rely on other controllers being loaded.
+local InitOrder = {
+    { Name = "DataController",  Path = script.Parent.Controllers.DataController },
+    { Name = "EggController",   Path = script.Parent.Controllers.EggController },
+    { Name = "HeistController", Path = script.Parent.Controllers.HeistController },
+    { Name = "PlotController",  Path = script.Parent.Controllers.PlotController },
+    { Name = "TradeController", Path = script.Parent.Controllers.TradeController },
+    { Name = "VFXController",   Path = script.Parent.Components.VFXController },
+    { Name = "SoundController", Path = script.Parent.Components.SoundController },
+    { Name = "UIController",    Path = script.Parent.Controllers.UIController },
 }
 
-for _, controller in Controllers do
-    local success, err = pcall(controller.Module.Init, player)
-    if success then
-        print(string.format("  [Client] ✓ %s ready", controller.Name))
+for _, entry in InitOrder do
+    local startTime = os.clock()
+    local mod = entry.Path
+    if not mod then
+        warn(string.format("  [Client] %s missing!", entry.Name))
+        continue
+    end
+
+    local ok, module = pcall(require, mod)
+    if not ok then
+        warn(string.format("  [Client] %s require failed: %s", entry.Name, tostring(module)))
+        continue
+    end
+
+    if not module or not module.Init then
+        warn(string.format("  [Client] %s has no Init()", entry.Name))
+        continue
+    end
+
+    local initOk, err = pcall(module.Init, player)
+    local elapsed = math.floor((os.clock() - startTime) * 1000)
+
+    if initOk then
+        print(string.format("  [Client] ✓ %s ready (%dms)", entry.Name, elapsed))
     else
-        warn(string.format("  [Client] ✗ %s failed: %s", controller.Name, tostring(err)))
+        warn(string.format("  [Client] ✗ %s failed: %s", entry.Name, tostring(err)))
     end
 end
 
