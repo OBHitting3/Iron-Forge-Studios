@@ -107,12 +107,13 @@ export async function logInteraction(agentId: string, input: Record<string, unkn
 
   if (error) throw new Error(`Failed to log interaction: ${error.message}`);
 
-  // Update client's last_contact_date
-  await supabase
+  const { error: updateError } = await supabase
     .from("clients")
     .update({ last_contact_date: new Date().toISOString() })
     .eq("id", input.client_id as string)
     .eq("agent_id", agentId);
+
+  if (updateError) throw new Error(`Interaction logged but failed to update client contact date: ${updateError.message}`);
 
   return data;
 }
@@ -191,14 +192,21 @@ export async function getFullClientProfile(agentId: string, clientId: string) {
   const [client, interactions, milestones, transactions] = await Promise.all([
     getClient(agentId, clientId),
     getClientInteractions(agentId, clientId),
-    supabase.from("milestones").select().eq("client_id", clientId).eq("agent_id", agentId).order("milestone_date"),
+    getClientMilestones(agentId, clientId),
     getClientTransactions(agentId, clientId),
   ]);
 
-  return {
-    client,
-    interactions,
-    milestones: milestones.data || [],
-    transactions,
-  };
+  return { client, interactions, milestones, transactions };
+}
+
+async function getClientMilestones(agentId: string, clientId: string): Promise<Milestone[]> {
+  const { data, error } = await supabase
+    .from("milestones")
+    .select()
+    .eq("client_id", clientId)
+    .eq("agent_id", agentId)
+    .order("milestone_date");
+
+  if (error) throw new Error(`Failed to get milestones: ${error.message}`);
+  return data;
 }

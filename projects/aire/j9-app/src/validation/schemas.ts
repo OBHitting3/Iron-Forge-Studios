@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD format");
+
 export const createClientSchema = z.object({
   first_name: z.string().min(1, "First name is required"),
   last_name: z.string().min(1, "Last name is required"),
@@ -15,8 +17,8 @@ export const createClientSchema = z.object({
   source: z.string().optional(),
   spouse_name: z.string().optional(),
   children: z.string().optional(),
-  birthday: z.string().optional(),
-  anniversary: z.string().optional(),
+  birthday: isoDate.optional(),
+  anniversary: isoDate.optional(),
   interests: z.string().optional(),
   pet_info: z.string().optional(),
   notes: z.string().optional(),
@@ -40,14 +42,14 @@ export const logInteractionSchema = z.object({
   ai_generated: z.boolean().default(false),
   sentiment: z.enum(["positive", "neutral", "negative", "urgent"]).optional(),
   follow_up_needed: z.boolean().default(false),
-  follow_up_date: z.string().optional(),
+  follow_up_date: isoDate.optional(),
   follow_up_note: z.string().optional(),
 });
 
 export const addMilestoneSchema = z.object({
   milestone_type: z.enum(["birthday", "anniversary", "purchase_anniversary", "closing", "listing", "move_in", "life_event"]),
   title: z.string().min(1, "Title is required"),
-  milestone_date: z.string().min(1, "Date is required"),
+  milestone_date: isoDate,
   recurring: z.boolean().default(false),
   notes: z.string().optional(),
 });
@@ -59,8 +61,8 @@ export const createTransactionSchema = z.object({
   community: z.string().optional(),
   list_price: z.number().positive().optional(),
   sale_price: z.number().positive().optional(),
-  listing_date: z.string().optional(),
-  closing_date: z.string().optional(),
+  listing_date: isoDate.optional(),
+  closing_date: isoDate.optional(),
   escrow_number: z.string().optional(),
   representing: z.enum(["buyer", "seller", "dual"]).optional(),
   co_agent_name: z.string().optional(),

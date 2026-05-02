@@ -34,8 +34,9 @@ clientRouter.get("/", async (req: Request, res: Response) => {
   try {
     const clients = await listClients(req.agentId!);
     res.json(clients);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    res.status(500).json({ error: message });
   }
 });
 
@@ -48,8 +49,9 @@ clientRouter.post("/", async (req: Request, res: Response) => {
     }
     const client = await createClient(req.agentId!, parsed.data);
     res.status(201).json(client);
-  } catch (err: any) {
-    res.status(400).json({ error: err.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    res.status(400).json({ error: message });
   }
 });
 
@@ -60,8 +62,9 @@ clientRouter.get("/search", async (req: Request, res: Response) => {
     if (!query) return res.status(400).json({ error: "Query parameter 'q' required" });
     const clients = await searchClients(req.agentId!, query);
     res.json(clients);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    res.status(500).json({ error: message });
   }
 });
 
@@ -70,8 +73,9 @@ clientRouter.get("/followups", async (req: Request, res: Response) => {
   try {
     const clients = await getClientsNeedingFollowup(req.agentId!);
     res.json(clients);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    res.status(500).json({ error: message });
   }
 });
 
@@ -81,8 +85,9 @@ clientRouter.get("/dormant", async (req: Request, res: Response) => {
     const days = parseInt(req.query.days as string) || 60;
     const clients = await getDormantClients(req.agentId!, days);
     res.json(clients);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    res.status(500).json({ error: message });
   }
 });
 
@@ -92,8 +97,9 @@ clientRouter.get("/milestones/upcoming", async (req: Request, res: Response) => 
     const days = parseInt(req.query.days as string) || 14;
     const milestones = await getUpcomingMilestones(req.agentId!, days);
     res.json(milestones);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    res.status(500).json({ error: message });
   }
 });
 
@@ -102,8 +108,9 @@ clientRouter.get("/:id/full", async (req: Request, res: Response) => {
   try {
     const profile = await getFullClientProfile(req.agentId!, req.params.id as string);
     res.json(profile);
-  } catch (err: any) {
-    res.status(404).json({ error: err.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    res.status(404).json({ error: message });
   }
 });
 
@@ -112,8 +119,9 @@ clientRouter.get("/:id", async (req: Request, res: Response) => {
   try {
     const client = await getClient(req.agentId!, req.params.id as string);
     res.json(client);
-  } catch (err: any) {
-    res.status(404).json({ error: err.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    res.status(404).json({ error: message });
   }
 });
 
@@ -126,8 +134,9 @@ clientRouter.patch("/:id", async (req: Request, res: Response) => {
     }
     const client = await updateClient(req.agentId!, req.params.id as string, parsed.data);
     res.json(client);
-  } catch (err: any) {
-    res.status(400).json({ error: err.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    res.status(400).json({ error: message });
   }
 });
 
@@ -140,8 +149,9 @@ clientRouter.post("/:id/interactions", async (req: Request, res: Response) => {
     }
     const interaction = await logInteraction(req.agentId!, { ...parsed.data, client_id: req.params.id as string });
     res.status(201).json(interaction);
-  } catch (err: any) {
-    res.status(400).json({ error: err.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    res.status(400).json({ error: message });
   }
 });
 
@@ -151,8 +161,9 @@ clientRouter.get("/:id/interactions", async (req: Request, res: Response) => {
     const limit = parseInt(req.query.limit as string) || 20;
     const interactions = await getClientInteractions(req.agentId!, req.params.id as string, limit);
     res.json(interactions);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    res.status(500).json({ error: message });
   }
 });
 
@@ -165,8 +176,9 @@ clientRouter.post("/:id/milestones", async (req: Request, res: Response) => {
     }
     const milestone = await addMilestone(req.agentId!, { ...parsed.data, client_id: req.params.id as string });
     res.status(201).json(milestone);
-  } catch (err: any) {
-    res.status(400).json({ error: err.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    res.status(400).json({ error: message });
   }
 });
 
@@ -179,8 +191,9 @@ clientRouter.post("/:id/transactions", async (req: Request, res: Response) => {
     }
     const transaction = await createTransaction(req.agentId!, { ...parsed.data, client_id: req.params.id as string });
     res.status(201).json(transaction);
-  } catch (err: any) {
-    res.status(400).json({ error: err.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    res.status(400).json({ error: message });
   }
 });
 
@@ -189,7 +202,8 @@ clientRouter.get("/:id/transactions", async (req: Request, res: Response) => {
   try {
     const transactions = await getClientTransactions(req.agentId!, req.params.id as string);
     res.json(transactions);
-  } catch (err: any) {
-    res.status(500).json({ error: err.message });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    res.status(500).json({ error: message });
   }
 });
