@@ -1,0 +1,35 @@
+{
+    "name": "PalmSpringsParadiseStealTheOasis",
+    "tree": {
+        "$className": "DataModel",
+        "ServerScriptService": {
+            "$className": "ServerScriptService",
+            "$path": "ServerScriptService"
+        },
+        "ReplicatedStorage": {
+            "$className": "ReplicatedStorage",
+            "$path": "ReplicatedStorage"
+        },
+        "StarterPlayer": {
+            "$className": "StarterPlayer",
+            "StarterPlayerScripts": {
+                "$className": "StarterPlayerScripts",
+                "$path": "StarterPlayerScripts"
+            }
+        },
+        "StarterGui": {
+            "$className": "StarterGui",
+            "$path": "StarterGui"
+        },
+        "ServerStorage": {
+            "$className": "ServerStorage",
+            "$path": "ServerStorage"
+        },
+        "Workspace": {
+            "$className": "Workspace",
+            "$properties": {
+                "FilteringEnabled": true
+            }
+        }
+    }
+}
